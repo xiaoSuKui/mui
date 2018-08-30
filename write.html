@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>写日记</title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+    <style type="text/css">
+    	textarea.noscrollbars {
+  overflow: hidden;
+  height: 200px;
+}
+    </style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">写日记</h1>
+			<button class="mui-btn mui-btn-primary mui-pull-right" style="margin-top:-2px;">发表</button>
+		</header>
+		<form class="mui-input-group" style="margin-top:45px;">
+		    <div class="mui-input-row">
+		    	<input type="text" class="mui-input-clear" placeholder="标题(可选)">
+		    </div>
+		    <div>
+			    <textarea class="noscrollbars" onkeyup="autoGrow(this);"></textarea>
+			    <script type="text/javascript">
+			    	function autoGrow (oField) {
+					  if (oField.scrollHeight > oField.clientHeight) {
+					    oField.style.height = oField.scrollHeight + "px";
+					  }
+					}
+			    </script>
+		    </div>
+		    <div class="mui-input-row"></div>
+		    <div class="sundry">
+		    	<p><span class="mui-icon mui-icon-location"></span></p>
+		    </div>
+		</form>
+		
+	</body>
+</html>

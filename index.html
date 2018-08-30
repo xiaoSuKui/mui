@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>每日一记</title>
+    <script src="js/mui.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link href="css/mui.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+    	var num=0;
+    	var sc=true;
+      	mui.init({
+		  pullRefresh : {
+		    container:'.drop',//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+		    up : { 
+		      height:50,//可选.默认50.触发上拉加载拖动距离
+		      auto:false,//可选,默认false.自动上拉加载一次
+		      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+		      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+		      callback : pushHtml//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+		    }
+		  }
+		}); 
+		 function pushHtml(){
+				var that=this;
+		      	if(sc){
+		      		num+=10;
+		      		$.ajax({
+		      			type:"get",
+		      			url:'http://zhaohs.cn/data/article/ideaList.php?num='+num,
+		      			async:true,
+		      			success:function(data){
+		      				var h="";  
+					   		if(!data.length==0){ 
+					   			for(var i=0;i<data.length;i++){
+					   				h+=`
+									 		<div class="mui-card">
+												<div class="mui-card-header"><span></span>&nbsp;&nbsp;<span>${data[i].title}<span></div>
+												<div class="mui-card-content">
+													 &nbsp;&nbsp;&nbsp;${data[i].content}
+													<div class="images">
+										`
+										if(data[i].img){
+											var imgs=data[i].img.split(",");
+												for(var j=0;j<imgs.length;j++){
+													html+=`<img src="${imgs[j]}"/>`
+												}
+										}
+										var week;
+										if(new Date(data[i].posted_time).getDay()==0) week="星期日";
+										if(new Date(data[i].posted_time).getDay()==1) week="星期一";
+										if(new Date(data[i].posted_time).getDay()==2) week="星期二";
+										if(new Date(data[i].posted_time).getDay()==3) week="星期三";
+										if(new Date(data[i].posted_time).getDay()==4) week="星期四";
+										if(new Date(data[i].posted_time).getDay()==5) week="星期五";
+										if(new Date(data[i].posted_time).getDay()==6) week="星期六";
+										h+=`
+													</div>
+												</div>
+												<div class="mui-card-footer">${data[i].posted_time} ${week} 发表于${data[i].posted_site}</div>
+											</div>
+								 	`
+					   			}
+					   			var frag=document.createDocumentFragment();
+								frag.innerHTML=h;
+								$('.main').append(h);
+								
+								that.endPullupToRefresh(false);
+					   		}else{
+					   			sc=false;
+					   			that.endPullupToRefresh(true);
+					   		}
+		      			}
+		      		});
+		      	}else{
+					   			that.endPullupToRefresh(true);
+							}	
+		      }
+    </script>
+    <style>
+    	.suspension{
+    		width:70px;
+    		height:70px;
+    		background:#E0E0E1;
+    		border-radius: 50%;
+    		position:fixed;
+    		bottom:20px;
+    		right:20px;
+    		z-index:999;
+    		text-align: center;
+    		line-height:70px;
+    		transition: all .5s linear;
+    	}
+    	.suspension>span{
+    		color:red;
+    		font-size:4em;
+    	}
+    	.mui-card{
+    		justify-content:start;
+    	}
+    	.mui-card-header>span:nth-child(1){
+    		width:34px;
+    		height:34px;
+    		background-image: url(img/5a264fb63362b.png);
+    	}
+    	.mui-card-header>span:nth-child(2){
+    		position: relative;
+    		top:2px;
+    	}
+    	.mui-card-content{
+    		margin-left:50px;
+    		border:none;
+    		margin-right: 10px;
+    	}
+    	.images>img{
+    		width:32%;
+    	}
+    	.mui-card-footer{
+    		font-size:8px;
+    		padding-bottom:0;
+    		justify-content:flex-end;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<h1 class="mui-title">每日一记</h1>
+	</header>
+	<div class="suspension">
+		<span class="mui-icon mui-icon-plusempty"></span>
+	</div>
+	<script type="text/javascript">
+		var s=document.getElementsByClassName("suspension")[0];
+		s.onclick=function(){
+			plus.webview.open('./write.html', 'new', {}, 'slide-in-right', 200);
+		}
+	</script>
+	<div class="main" style="margin-top:45px;">
+		
+	</div>
+	<div class="drop"></div>
+	<!--<div class="mui-card">
+		<div class="mui-card-header"><span></span>【2018-8-12】</div>
+		<div class="mui-card-content">今天吃了一顿大盘鸡，让我好是快活！idfgdkhkjhgkj好的科技感货到付款还上课时间和高科技 好看到几个好看
+			<div class="images">
+				<img src="img/5a264fb63362b.png"/>
+				<img src="img/5a264fb63362b.png" />
+				<img src="img/5a264fb63362b.png"/>
+			</div>
+		</div>
+		<div class="mui-card-footer">2018.8.12 11:11:12 星期日 发表于郑州.硅谷广场A座19楼</div>
+	</div>-->
+	<script type="text/javascript">
+		var html='';
+		$.ajax({
+			type:"get",
+			url:"http://zhaohs.cn/data/article/ideaList.php?num=0",
+			async:false,
+			success:function(data){
+				console.log(data);
+			 for(var i=0;i<data.length;i++){
+			 	html+=`
+			 		<div class="mui-card">
+						<div class="mui-card-header"><span></span>&nbsp;&nbsp;<span>${data[i].title}<span></div>
+						<div class="mui-card-content">
+							 &nbsp;&nbsp;&nbsp;${data[i].content}
+							<div class="images">
+				`
+				if(data[i].img){
+					var imgs=data[i].img.split(",");
+						for(var j=0;j<imgs.length;j++){
+							html+=`<img src="${imgs[j]}"/>`
+						}
+				}
+				var week;
+				if(new Date(data[i].posted_time).getDay()==0) week="星期日";
+				if(new Date(data[i].posted_time).getDay()==1) week="星期一";
+				if(new Date(data[i].posted_time).getDay()==2) week="星期二";
+				if(new Date(data[i].posted_time).getDay()==3) week="星期三";
+				if(new Date(data[i].posted_time).getDay()==4) week="星期四";
+				if(new Date(data[i].posted_time).getDay()==5) week="星期五";
+				if(new Date(data[i].posted_time).getDay()==6) week="星期六";
+				html+=`
+							</div>
+						</div>
+						<div class="mui-card-footer">${data[i].posted_time} ${week} 发表于${data[i].posted_site}</div>
+					</div>
+			 	`
+			 }
+			 var main=document.getElementsByClassName('main')[0];
+			 console.log(main.html);
+			 main.innerHTML=html;
+			}
+		});
+	</script>
+</body>
+</html>
