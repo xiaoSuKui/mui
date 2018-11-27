@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title>写日记</title>
     <script src="js/mui.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
     <link href="css/mui.css" rel="stylesheet"/>
     <script type="text/javascript" charset="utf-8">
       	mui.init();
     </script>
+    <script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
     <style type="text/css">
     	textarea.noscrollbars {
   overflow: hidden;
@@ -23,11 +25,11 @@
 			<button class="mui-btn mui-btn-primary mui-pull-right" style="margin-top:-2px;">发表</button>
 		</header>
 		<form class="mui-input-group" style="margin-top:45px;">
-		    <div class="mui-input-row">
+		    <div class="mui-input-row title">
 		    	<input type="text" class="mui-input-clear" placeholder="标题(可选)">
 		    </div>
 		    <div>
-			    <textarea class="noscrollbars" onkeyup="autoGrow(this);"></textarea>
+			    <textarea class="noscrollbars" onkeyup="autoGrow(this);" style="height: 80vh;"></textarea>
 			    <script type="text/javascript">
 			    	function autoGrow (oField) {
 					  if (oField.scrollHeight > oField.clientHeight) {
@@ -37,10 +39,22 @@
 			    </script>
 		    </div>
 		    <div class="mui-input-row"></div>
-		    <div class="sundry">
-		    	<p><span class="mui-icon mui-icon-location"></span></p>
+		    <div class="sundry" style="background: #ffffff; position: fixed;bottom:0; width:100%;">
+		    		<p class="mui-icon mui-icon-location location" style='font-size: 14px;margin-bottom:0;'><span></span></p>
+		    		<hr />
+		    		<div></div>
 		    </div>
+		    <ul class="mui-table-view  locationList" style="transition: all .2s linear; position: fixed; top:0;left:100%; width:100%;height:100%;z-index: 999; overflow: auto;">
+			    <!--<li class="mui-table-view-cell mui-media">
+			        
+			            <div class="mui-media-body">
+			                幸福
+			                <p class='mui-ellipsis'>能和心爱的人一起睡觉，是件幸福的事情；可是，打呼噜怎么办？</p>
+			            </div>
+			        
+			    </li>-->
+			</ul>
 		</form>
-		
 	</body>
+	<script src="js/write.js" type="text/javascript" charset="utf-8"></script>
 </html>
