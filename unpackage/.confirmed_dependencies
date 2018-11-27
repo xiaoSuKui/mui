@@ -1,0 +1,30 @@
+{
+  "write.html": {
+    "href": "write.html",
+    "resources": [
+      "js/write.js",
+      "js/mui.min.js",
+      "js/webuploader.html5only.min.js",
+      "css/mui.css",
+      "css/webuploader.css",
+      "js/fly-zomm-img.min.js",
+      "img/close.png",
+      "img/photo.png"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "index.html": {
+    "href": "index.html",
+    "resources": [
+      "js/mui.min.js",
+      "js/fly-zomm-img.min.js",
+      "css/mui.css",
+      "img/5a264fb63362b.png"
+    ],
+    "refer": [
+      "write.html"
+    ],
+    "priority": 0
+  }
+}

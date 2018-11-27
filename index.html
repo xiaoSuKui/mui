@@ -6,10 +6,14 @@
     <title>每日一记</title>
     <script src="js/mui.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="js/fly-zomm-img.min.js" type="text/javascript" charset="utf-8"></script>
     <link href="css/mui.css" rel="stylesheet"/>
     <script type="text/javascript" charset="utf-8">
     	var num=0;
     	var sc=true;
+    	window.addEventListener('refresh', function(e) {  
+		       location.reload();  
+		}) 
       	mui.init({
 		  pullRefresh : {
 		    container:'.drop',//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
@@ -31,20 +35,21 @@
 		      			url:'http://zhaohs.cn/data/article/ideaList.php?num='+num,
 		      			async:true,
 		      			success:function(data){
+		      				console.log(data);
 		      				var h="";  
 					   		if(!data.length==0){ 
 					   			for(var i=0;i<data.length;i++){
 					   				h+=`
 									 		<div class="mui-card">
-												<div class="mui-card-header"><span></span>&nbsp;&nbsp;<span>${data[i].title}<span></div>
+												<div class="mui-card-header"><img src="https://cdn.heweather.com/cond_icon/${data[i].cond_code}.png" /><span>${data[i].title}<span></div>
 												<div class="mui-card-content">
-													 &nbsp;&nbsp;&nbsp;${data[i].content}
+													 ${data[i].content}
 													<div class="images">
 										`
 										if(data[i].img){
 											var imgs=data[i].img.split(",");
 												for(var j=0;j<imgs.length;j++){
-													html+=`<img src="${imgs[j]}"/>`
+													h+=`<img src="${imgs[j]}"/>`
 												}
 										}
 										var week;
@@ -58,14 +63,14 @@
 										h+=`
 													</div>
 												</div>
-												<div class="mui-card-footer">${data[i].posted_time} ${week} 发表于${data[i].posted_site}</div>
+												<div class="mui-card-footer">${data[i].posted_time} ${week} ${data[i].weather} 发表于${data[i].posted_site}</div>
 											</div>
 								 	`
 					   			}
 					   			var frag=document.createDocumentFragment();
 								frag.innerHTML=h;
 								$('.main').append(h);
-								
+								$('.images').FlyZommImg(); 
 								that.endPullupToRefresh(false);
 					   		}else{
 					   			sc=false;
@@ -136,7 +141,7 @@
 			plus.webview.open('./write.html', 'new', {}, 'slide-in-right', 200);
 		}
 	</script>
-	<div class="main" style="margin-top:45px;">
+	<div class="main" id="main" style="margin-top:45px;">
 		
 	</div>
 	<div class="drop"></div>
@@ -160,37 +165,37 @@
 			success:function(data){
 				console.log(data);
 			 for(var i=0;i<data.length;i++){
-			 	html+=`
-			 		<div class="mui-card">
-						<div class="mui-card-header"><span></span>&nbsp;&nbsp;<span>${data[i].title}<span></div>
-						<div class="mui-card-content">
-							 &nbsp;&nbsp;&nbsp;${data[i].content}
-							<div class="images">
-				`
-				if(data[i].img){
-					var imgs=data[i].img.split(",");
-						for(var j=0;j<imgs.length;j++){
-							html+=`<img src="${imgs[j]}"/>`
-						}
-				}
-				var week;
-				if(new Date(data[i].posted_time).getDay()==0) week="星期日";
-				if(new Date(data[i].posted_time).getDay()==1) week="星期一";
-				if(new Date(data[i].posted_time).getDay()==2) week="星期二";
-				if(new Date(data[i].posted_time).getDay()==3) week="星期三";
-				if(new Date(data[i].posted_time).getDay()==4) week="星期四";
-				if(new Date(data[i].posted_time).getDay()==5) week="星期五";
-				if(new Date(data[i].posted_time).getDay()==6) week="星期六";
-				html+=`
-							</div>
-						</div>
-						<div class="mui-card-footer">${data[i].posted_time} ${week} ${data[i].posted_site}</div>
-					</div>
+			 	html+=`<div class="mui-card">
+												<div class="mui-card-header"><img src="https://cdn.heweather.com/cond_icon/${data[i].cond_code}.png" /><span>${data[i].title}<span></div>
+												<div class="mui-card-content">
+													 ${data[i].content}
+													<div class="images">
+										`
+										if(data[i].img){
+											var imgs=data[i].img.split(",");
+												for(var j=0;j<imgs.length;j++){
+													html+=`<img src="${imgs[j]}"/>`
+												}
+										}
+										var week;
+										if(new Date(data[i].posted_time).getDay()==0) week="星期日";
+										if(new Date(data[i].posted_time).getDay()==1) week="星期一";
+										if(new Date(data[i].posted_time).getDay()==2) week="星期二";
+										if(new Date(data[i].posted_time).getDay()==3) week="星期三";
+										if(new Date(data[i].posted_time).getDay()==4) week="星期四";
+										if(new Date(data[i].posted_time).getDay()==5) week="星期五";
+										if(new Date(data[i].posted_time).getDay()==6) week="星期六";
+										html+=`
+													</div>
+												</div>
+												<div class="mui-card-footer">${data[i].posted_time} ${week} ${data[i].weather} 发表于${data[i].posted_site}</div>
+											</div>
 			 	`
 			 }
 			 var main=document.getElementsByClassName('main')[0];
-			 console.log(main.html);
+			 //$('#images').FlyZommImg();
 			 main.innerHTML=html;
+			 $('.images').FlyZommImg();
 			}
 		});
 	</script>

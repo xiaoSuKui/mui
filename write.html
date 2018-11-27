@@ -3,33 +3,66 @@
 	<head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+     <meta name="renderer" content="webkit">
+    <meta name="renderer" content="ie-stand">
+    <!--避免IE使用兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1,IE=9" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
     <title>写日记</title>
     <script src="js/mui.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>-->
+    <!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=yRCEGtOinq0Ht0bcgAxkPlp0I9YAV5SF"></script>-->
+    <script src="js/webuploader.html5only.min.js"></script>
     <link href="css/mui.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/webuploader.css" />
+    <script src="js/fly-zomm-img.min.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-      	mui.init();
+			mui.init({
+				swipeBack:true,
+				beforeback: function() {  
+				   //获得列表界面的webview  
+				   var list = plus.webview.currentWebview().opener();  
+				   //触发列表界面的自定义事件（refresh）,从而进行数据刷新  
+				   mui.fire(list, 'refresh');  
+				   //返回true，继续页面关闭逻辑  
+				   return true;  
+				}  
+			});
     </script>
-    <script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
     <style type="text/css">
     	textarea.noscrollbars {
-  overflow: hidden;
-  height: 200px;
-}
+		  overflow: hidden;
+		  height: 200px;
+		}
+		body{margin: 0;padding: 0;background: #ffffff;} 
+	    img{display: block;width: 100%;height: auto;} 
+	    .close{
+	    	width: 20px;
+	    	height:20px; 
+			background: url(img/close.png);
+			background-size: 20px 20px;
+			    z-index: 999;
+			    position: absolute;
+			    right: -5px;
+			    top: -5px;
+		}
     </style>
 	</head>
 	<body>
+		<div id="allmap" style="display: none;"></div> 
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">写日记</h1>
-			<button class="mui-btn mui-btn-primary mui-pull-right" style="margin-top:-2px;">发表</button>
+			<button class="mui-btn mui-btn-primary mui-pull-right" style="margin-top:-2px;" onclick="sub()" id="sub">发表</button>
 		</header>
 		<form class="mui-input-group" style="margin-top:45px;">
 		    <div class="mui-input-row title">
-		    	<input type="text" class="mui-input-clear" placeholder="标题(可选)">
+		    	<input type="text" class="mui-input-clear" id="title" placeholder="标题(可选)">
 		    </div>
 		    <div>
-			    <textarea class="noscrollbars" onkeyup="autoGrow(this);" style="height: 80vh;"></textarea>
+			    <textarea class="noscrollbars" id="content" onkeydown="autoGrow(this);" style="height: 80vh;"></textarea>
 			    <script type="text/javascript">
 			    	function autoGrow (oField) {
 					  if (oField.scrollHeight > oField.clientHeight) {
@@ -38,15 +71,22 @@
 					}
 			    </script>
 		    </div>
-		    <div class="mui-input-row"></div>
-		    <div class="sundry" style="background: #ffffff; position: fixed;bottom:0; width:100%;">
-		    		<p class="mui-icon mui-icon-location location" style='font-size: 14px;margin-bottom:0;'><span></span></p>
+
+		    <div class="sundry" style="background: #ffffff;  width:100%;">
+		    		<p class="mui-icon mui-icon-location location" style='font-size: 14px;margin-bottom:0;'><span></span>正在定位(不开GPS误差较大)...</p>
 		    		<hr />
-		    		<div></div>
+		    		<div id="uploader">    
+					    <!--用来存放item-->
+					    <div style="width:100%;overflow: auto;margin:0;padding:0;">
+					    	<div id="fileList" class="uploader-list"></div>
+					    </div>
+					    <div id="filePicker">
+					    	<div id="imgUp" style="width:35px;height:35px;margin-left:20px;background: url(img/photo.png) no-repeat 0 -5px;background-size: 35px 35px;;"></div>
+					    </div>
+					</div>
 		    </div>
-		    <ul class="mui-table-view  locationList" style="transition: all .2s linear; position: fixed; top:0;left:100%; width:100%;height:100%;z-index: 999; overflow: auto;">
+		    <ul class="mui-table-view  locationList" style="transition: left .2s linear; position: fixed; top:0;left:100%; width:100%;height:100%;z-index: 999; overflow: auto;">
 			    <!--<li class="mui-table-view-cell mui-media">
-			        
 			            <div class="mui-media-body">
 			                幸福
 			                <p class='mui-ellipsis'>能和心爱的人一起睡觉，是件幸福的事情；可是，打呼噜怎么办？</p>
